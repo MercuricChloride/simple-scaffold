@@ -7,8 +7,8 @@ export default function Header() {
   return (
     <a href="/" rel="noopener noreferrer">
       <PageHeader
-        title="⚡️ Ghost Scaffold-ETH"
-        subTitle="A starterkit for @ghostffcode buidls"
+        title="Blind Scaffold-ETH"
+        subTitle="A starterkit for my personal buidls (inspired and forked from @ghostffcode)"
         className="inline-flex"
       />
     </a>

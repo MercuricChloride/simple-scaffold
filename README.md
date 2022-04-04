@@ -1,6 +1,7 @@
-# 👻🏗 Ghost Scaffold-ETH (WIP)
+# 👻🏗 Blind Scaffold-ETH (WIP)
 
 > My personal starterkit for quick scaffold-eth Buidls
+> Shamelessly stolen from @ghostffcode
 
 ![Ghost Scaffold-ETH](https://user-images.githubusercontent.com/14002941/160478916-77d99c6c-ce21-4781-a7ca-2327476a6f1f.png)
 
