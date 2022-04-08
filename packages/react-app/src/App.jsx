@@ -54,12 +54,12 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const initialNetwork = NETWORKS.mainnet; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
-const DEBUG = true;
-const NETWORKCHECK = true;
-const USE_BURNER_WALLET = true; // toggle burner wallet feature
+const DEBUG = false;
+const NETWORKCHECK = false;
+const USE_BURNER_WALLET = false; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 // 🛰 providers
@@ -202,14 +202,13 @@ function App() {
 
   return (
     <div className="App mx-6">
-      {/* ✏️ Edit the header and change the title to your project name */}
       <div className="flex flex-1 justify-between items-center pt-4">
         <div className="flex flex-1">
           <Header />
         </div>
 
         <div className="flex flex-1 justify-center">
-          <Menu selectedKeys={[location.pathname]} mode="horizontal">
+          {/* <Menu selectedKeys={[location.pathname]} mode="horizontal">
             <Menu.Item key="/">
               <Link to="/">App Home</Link>
             </Menu.Item>
@@ -218,7 +217,7 @@ function App() {
                 <Link to="/debug">Contracts</Link>
               </Menu.Item>
             )}
-          </Menu>
+          </Menu> */}
         </div>
 
         <div className="flex flex-1 justify-end">
@@ -245,24 +244,14 @@ function App() {
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
 
-      <section className="mt-4 flex flex-1">
+      {/* <section className="mt-4 flex flex-1"> */}
         <Switch>
           <Route exact path="/">
-            {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
             <Home
-              tx={tx}
-              readContracts={readContracts}
-              writeContracts={writeContracts}
-              yourLocalBalance={yourLocalBalance}
+              signer={userSigner}
             />
           </Route>
           <Route exact path="/debug">
-            {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
-
             <Contract
               name="YourContract"
               price={price}
@@ -274,11 +263,10 @@ function App() {
             />
           </Route>
         </Switch>
-      </section>
+      {/* </section> */}
 
       <ThemeSwitch />
 
-      {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 50, padding: 10 }}>
         <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
           {USE_NETWORK_SELECTOR && (
@@ -294,46 +282,6 @@ function App() {
         {address && yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
           <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
         )}
-      </div>
-
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
-
-          <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-            <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-            <Button
-              onClick={() => {
-                window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
-              }}
-              size="large"
-              shape="round"
-            >
-              <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                💬
-              </span>
-              Support
-            </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              /*  if the local provider has a signer, let's show the faucet:  */
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ""
-              )
-            }
-          </Col>
-        </Row>
       </div>
     </div>
   );

@@ -7,8 +7,7 @@ export default function Header() {
   return (
     <a href="/" rel="noopener noreferrer">
       <PageHeader
-        title="Blind Scaffold-ETH"
-        subTitle="A starterkit for my personal buidls (inspired and forked from @ghostffcode)"
+        title="Super Simple Verify"
         className="inline-flex"
       />
     </a>
