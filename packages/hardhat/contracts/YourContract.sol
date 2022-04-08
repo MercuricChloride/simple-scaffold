@@ -2,7 +2,8 @@ pragma solidity >=0.8.0 <0.9.0;
 //SPDX-License-Identifier: MIT
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/access/Ownable.sol"; 
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 
 /*
@@ -33,38 +34,38 @@ There is going to be a check for the last placement of a users pixel, and if it 
 Each time a pixel is written, an event will be emitted, and from these events the board will be colored in on the users end.
 
 */
-contract YourContract is Ownable{
 
-  uint256 public constant fee = 0.001 ether;
-  address public constant blindnabler = 0x807a1752402D21400D555e1CD7f175566088b955;
-  uint256 public gameOver;
+contract YourContract is Ownable {
+    uint256 public constant fee = 0.001 ether;
+    address public constant blindnabler = 0x807a1752402D21400D555e1CD7f175566088b955;
+    uint256 public gameOver;
 
-  uint8[250000] public colors;
-  address[250000] public ownerOfPixel;
-  mapping(address => uint256) public lastPlacement;
+    uint8[250000] public colors;
+    address[250000] public ownerOfPixel;
+    mapping(address => uint256) public lastPlacement;
 
-  event Pixel(uint256 pixel, uint8 color);
+    event Pixel(uint256 pixel, uint8 color);
 
-  constructor(uint256 _gameOver) payable {
-  // transfer ownership to blindnabler.eth
-  transferOwnership(blindnabler);
-  // Set the timestamp for the game to be complete
-  gameOver = _gameOver;
-  }
+    constructor(uint256 _gameOver, address _owner) payable {
+        // transfer ownership
+        transferOwnership(_owner);
+        // Set the timestamp for the game to be complete
+        gameOver = _gameOver;
+    }
 
+    function write(uint256 _pixel, uint8 _color) public payable {
+        require(lastPlacement[msg.sender] <= block.timestamp - 5 minutes, "Must wait at least 5 minutes before placing another pixel");
+        require(msg.value >= fee, "fee too low");
+        require(block.timestamp < gameOver, "Game is finished");
 
-  function write(uint256 _pixel, uint8 _color) public payable {
-    require(lastPlacement[msg.sender] <= block.timestamp - 5 minutes);
-    require(msg.value >= fee, 'fee too low');
-    require(block.timestamp < gameOver, 'Game is finished');
+        colors[_pixel] = _color;
+        ownerOfPixel[_pixel] = msg.sender;
+        lastPlacement[msg.sender] = block.timestamp;
+        emit Pixel(_pixel, _color);
+    }
 
-    colors[_pixel] = _color;
-    ownerOfPixel[_pixel] = msg.sender;
-    lastPlacement[msg.sender] = block.timestamp;
-    emit Pixel(_pixel, _color);
-  }
+    // to support receiving ETH by default
+    receive() external payable {}
 
-  // to support receiving ETH by default
-  receive() external payable {}
-  fallback() external payable {}
+    fallback() external payable {}
 }
